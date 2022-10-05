@@ -8,6 +8,12 @@ class Node:
     def total_path(self):
         return self.parent.total_path() + [self.action] if self.parent else []
 
+    def total_path_iterative(self):
+        resultList = []
+        while self.parent is not None:
+            resultList.append(self.action)
+            self = self.parent
+        return resultList[::-1]
 
 
     def __str__(self):
