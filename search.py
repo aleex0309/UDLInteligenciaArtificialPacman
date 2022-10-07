@@ -74,21 +74,28 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
 
 def depthFirstSearch(problem):
-    """
-    Search the deepest nodes in the search tree first.
+    n = node.Node(problem.getStartState())
+    if problem.isGoalState(problem.getStartState()):
+        return n.total_path()
 
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
+    fringe = util.Stack()
+    fringe.push(n)
+    generated = set()
 
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
+    while not fringe.isEmpty():
+        n = fringe.pop()
+        generated.add(n.state)
 
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+        for successor, action, cost in (problem.getSuccessors(n.state)):
+            ns = node.Node(successor, n, action, n.cost + cost)
+            if ns.state not in generated:
+                if problem.isGoalState(ns.state):
+                    return ns.total_path()
+                fringe.push(ns)
+                generated.add(ns.state)
+
+    print("No solution for this problem.")
+    sys.exit(-1)
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -118,9 +125,29 @@ def breadthFirstSearch(problem):
     sys.exit(-1)
 
 def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #Implement a Uniform Cost Search algorithm to solve the problem
+    n = node.Node(problem.getStartState())
+    if problem.isGoalState(problem.getStartState()):
+        return n.total_path()
+
+    fringe = util.PriorityQueue()
+    fringe.push(n, n.cost)
+    generated = set()
+
+    while not fringe.isEmpty():
+        n = fringe.pop()
+        generated.add(n.state)
+
+        for successor, action, cost in (problem.getSuccessors(n.state)):
+            ns = node.Node(successor, n, action, n.cost + cost)
+            if ns.state not in generated:
+                if problem.isGoalState(ns.state):
+                    return ns.total_path()
+                fringe.push(ns, ns.cost)
+                generated.add(ns.state)
+
+    print("No solution for this problem.")
+    sys.exit(-1)
 
 def nullHeuristic(state, problem=None):
     """
