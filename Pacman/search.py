@@ -125,27 +125,26 @@ def breadthFirstSearch(problem):
     sys.exit(-1)
 
 def uniformCostSearch(problem):
-    #Implement a Uniform Cost Search algorithm to solve the problem
     n = node.Node(problem.getStartState())
     if problem.isGoalState(problem.getStartState()):
         return n.total_path()
-
     fringe = util.PriorityQueue()
-    fringe.push(n, n.cost)
-    generated = set()
-
+    generated = {}
+    fringe.push(n, 0)
+    generated[n.state] = ("F", 0)
     while not fringe.isEmpty():
         n = fringe.pop()
-        generated.add(n.state)
-
+        if problem.isGoalState(n.state):
+            return n.total_path()
+        generated[n.state] = ("E", n.cost)
         for successor, action, cost in (problem.getSuccessors(n.state)):
             ns = node.Node(successor, n, action, n.cost + cost)
             if ns.state not in generated:
-                if problem.isGoalState(ns.state):
-                    return ns.total_path()
                 fringe.push(ns, ns.cost)
-                generated.add(ns.state)
-
+                generated[ns.state] = ("F", ns.cost)
+            elif generated[ns.state][0] == "F" and generated[ns.state][1] > ns.cost:
+                fringe.update(ns, ns.cost)
+                generated[ns.state] = ("F", ns.cost)
     print("No solution for this problem.")
     sys.exit(-1)
 
