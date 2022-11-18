@@ -289,20 +289,23 @@ class CornersProblem(search.SearchProblem):
         # in initializing the problem
         "*** YOUR CODE HERE ***"
 
+
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        return self.startingPosition, tuple([False for _ in range(4)])
+        "*** YOUR CODE HERE ***"
+        return (self.startingPosition, tuple(False for _ in range(4))) # (position, visited)
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        _, corners = state
-        #return False not in corners => Checks if all corners are visited
-        return all(corners) #Checks if is any false in corners
+        "*** YOUR CODE HERE ***"
+        _, corners = state # position and corners
+        # return False not in corners
+        return all(corners)
 
     def getSuccessors(self, state):
         """
@@ -314,6 +317,7 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
+
         currentPosition, corners = state
 
         successors = []
@@ -325,6 +329,7 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
 
+            "*** YOUR CODE HERE ***"
             if not hitsWall:
                 nextPosition = (nextx, nexty)
                 nextCorners = []
@@ -367,7 +372,34 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+
+    # Heuristic implementation for the Corners Problem
+
+    coordinates = state[0]
+    visited = state[1]
+
+    heuristic = 0
+    NOvisited = []
+
+    for corner in corners:
+        if not corner in visited:
+            NOvisited.append(corner)
+
+    while len(NOvisited) > 0:
+        manhattanDistance = []
+
+        for corner in NOvisited:
+            calculate = util.manhattanDistance(coordinates, corner)
+            cornerManhattan = (calculate, corner)
+            manhattanDistance.append(cornerManhattan)
+
+        maximum, maxCorner = max(manhattanDistance) # maxCorner is the corner with the max distance from the current position
+        NOvisited.remove(maxCorner)
+
+        coordinates = maxCorner # Update the current position
+        heuristic += maximum # Add the max distance to the heuristic
+
+    return heuristic
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"

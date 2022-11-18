@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 import sys
 import node
+import searchAgents
 import util
 
 class SearchProblem:
@@ -153,11 +154,34 @@ def nullHeuristic(state, problem=None):
     A heuristic function estimates the cost from the current state to the nearest
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
-    return 0
+    return util.manhattanDistance(state, problem.goal)
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    n = node.Node(problem.getStartState())
+    if problem.isGoalState(problem.getStartState()):
+        return n.total_path()
+    fringe = util.PriorityQueue()
+    generated = {}
+    fringe.push(n, 0)
+    generated[n.state] = ("F", 0)
+    while not fringe.isEmpty():
+        n = fringe.pop()
+        if problem.isGoalState(n.state):
+            return n.total_path()
+        generated[n.state] = ("E", n.cost)
+        for successor, action, cost in (problem.getSuccessors(n.state)):
+            ns = node.Node(successor, n, action, n.cost + cost + heuristic(successor, problem))
+            print(heuristic(successor, problem))
+            if ns.state not in generated:
+                fringe.push(ns, ns.cost)
+                generated[ns.state] = ("F", ns.cost)
+            elif generated[ns.state][0] == "F" and generated[ns.state][1] > ns.cost:
+                fringe.update(ns, ns.cost)
+                generated[ns.state] = ("F", ns.cost)
+    print("No solution for this problem.")
+    sys.exit(-1)
     util.raiseNotDefined()
 
 
