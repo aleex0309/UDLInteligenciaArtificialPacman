@@ -372,28 +372,33 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-
-    # Heuristic implementation for the Corners Problem
-
-    position = state[0] # current position
-    visitedCorners = state[1]
-
+    coordinates = state[0]
     heuristic = 0
-    unvisitedCorners = corners # list of unvisited corners
 
-    while len(unvisitedCorners) > 0: # while there are unvisited corners
-        manhattanDistance = []
+    visited = state[1]
+    unvisitedCorners = []
+
+    for corner in corners:
+        if not corner in visited:
+            unvisitedCorners.append(corner)
+
+    while len(unvisitedCorners) > 0:
+        manhattan = []
 
         for corner in unvisitedCorners:
-            calculate = util.manhattanDistance(position, corner) # calculate manhattan distance between current position and unvisited corners
-            cornerManhattan = (calculate, corner)
-            manhattanDistance.append(cornerManhattan)
+            # Manhattan: abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+            calculate = util.manhattanDistance(coordinates, corner)
+            CornerManhattan = (calculate, corner)
+            #If has walls in the path, add "infinite" to the manhattan distance
+            if walls[coordinates[0]][corner[1]] or walls[corner[0]][coordinates[1]]:
+                CornerManhattan = (999999, corner)
+            manhattan.append(CornerManhattan)
 
-        minimum, minCorner = min(manhattanDistance) # minimum distance and corner
+        minimum, minCorner = min(manhattan)
         unvisitedCorners.remove(minCorner)
 
-        position = minCorner # Update the current position
-        heuristic += minimum # Add the min distance to the heuristic
+        coordinates = minCorner
+        heuristic += minimum
 
     return heuristic
 
@@ -500,6 +505,9 @@ def foodHeuristic(state, problem):
             # Manhattan: abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
             calculate = util.manhattanDistance(position, food) # calculate manhattan distance between current position and uneaten food
             foodManhattan = (calculate, food)
+            #if has walls in the path, add "infinite" to the manhattan distance
+            if problem.walls[position[0]][food[1]]:
+                foodManhattan = (calculate + 9999999, food)
             manhattan.append(foodManhattan)
 
         minimum, minFood = min(manhattan)
