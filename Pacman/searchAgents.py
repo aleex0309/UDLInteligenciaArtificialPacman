@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -376,28 +376,28 @@ def cornersHeuristic(state, problem):
     # Heuristic implementation for the Corners Problem
 
     coordinates = state[0]
-    visited = state[1]
+    visitedCorners = state[1]
 
     heuristic = 0
-    NOvisited = []
+    unvisitedCorners = []
 
     for corner in corners:
-        if not corner in visited:
-            NOvisited.append(corner)
+        if not corner in visitedCorners:
+            unvisitedCorners.append(corner)
 
-    while len(NOvisited) > 0:
+    while len(unvisitedCorners) > 0:
         manhattanDistance = []
 
-        for corner in NOvisited:
+        for corner in unvisitedCorners:
             calculate = util.manhattanDistance(coordinates, corner)
             cornerManhattan = (calculate, corner)
             manhattanDistance.append(cornerManhattan)
 
-        minimum, minCorner = min(manhattanDistance) # maxCorner is the corner with the max distance from the current position
-        NOvisited.remove(minCorner)
+        minimum, minCorner = min(manhattanDistance) # minimum distance and corner
+        unvisitedCorners.remove(minCorner)
 
         coordinates = minCorner # Update the current position
-        heuristic += minimum # Add the max distance to the heuristic
+        heuristic += minimum # Add the min distance to the heuristic
 
     return heuristic
 
@@ -498,24 +498,26 @@ def foodHeuristic(state, problem):
     eaten = state[1]
     NOeaten = []
 
-    for food in foodGrid:
-        if not food in eaten:
-            NOeaten.append(food)
+    NOeaten = foodGrid.asList()
+    #print(NOeaten)
 
     while len(NOeaten) > 0:
         manhattan = []
 
         for food in NOeaten:
             # Manhattan: abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
-            calculate = util.manhattanDistance(position, food)
-            FoodManhattan = (calculate, food)
+            distance = util.manhattanDistance(position, food)
+            FoodManhattan = (distance, food)
+            #print(FoodManhattan)
             manhattan.append(FoodManhattan)
 
-        maximum, maxFood = min(manhattan)
-        NOeaten.remove(maxFood)
+        minimum , minFood = min(manhattan)
+        #print("The minimum is", minimum)
+        NOeaten.remove(minFood)
 
-        position = maxFood
-        heuristic = heuristic + maximum
+        heuristic += minimum
+
+        position = minFood
 
     return heuristic
 
