@@ -173,7 +173,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         generated[n.state] = ("E", n.cost)
         for successor, action, cost in (problem.getSuccessors(n.state)):
             ns = node.Node(successor, n, action, n.cost + cost + heuristic(successor, problem))
-            print(heuristic(successor, problem))
+            #print(heuristic(successor, problem))
             if ns.state not in generated:
                 fringe.push(ns, ns.cost)
                 generated[ns.state] = ("F", ns.cost)

@@ -393,11 +393,11 @@ def cornersHeuristic(state, problem):
             cornerManhattan = (calculate, corner)
             manhattanDistance.append(cornerManhattan)
 
-        maximum, maxCorner = max(manhattanDistance) # maxCorner is the corner with the max distance from the current position
-        NOvisited.remove(maxCorner)
+        minimum, minCorner = min(manhattanDistance) # maxCorner is the corner with the max distance from the current position
+        NOvisited.remove(minCorner)
 
-        coordinates = maxCorner # Update the current position
-        heuristic += maximum # Add the max distance to the heuristic
+        coordinates = minCorner # Update the current position
+        heuristic += minimum # Add the max distance to the heuristic
 
     return heuristic
 
@@ -511,7 +511,7 @@ def foodHeuristic(state, problem):
             FoodManhattan = (calculate, food)
             manhattan.append(FoodManhattan)
 
-        maximum, maxFood = max(manhattan)
+        maximum, maxFood = min(manhattan)
         NOeaten.remove(maxFood)
 
         position = maxFood
