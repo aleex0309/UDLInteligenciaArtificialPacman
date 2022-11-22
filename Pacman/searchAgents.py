@@ -505,9 +505,8 @@ def foodHeuristic(state, problem):
             # Manhattan: abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
             calculate = util.manhattanDistance(position, food) # calculate manhattan distance between current position and uneaten food
             foodManhattan = (calculate, food)
-            #if has walls in the path, add "infinite" to the manhattan distance
             if problem.walls[position[0]][food[1]]:
-                foodManhattan = (calculate + 9999999, food)
+                foodManhattan = (calculate + 9999999, food) # add "infinite" to the manhattan distance
             manhattan.append(foodManhattan)
 
         minimum, minFood = min(manhattan)
