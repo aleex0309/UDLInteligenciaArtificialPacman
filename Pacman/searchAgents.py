@@ -375,28 +375,24 @@ def cornersHeuristic(state, problem):
 
     # Heuristic implementation for the Corners Problem
 
-    coordinates = state[0]
+    position = state[0] # current position
     visitedCorners = state[1]
 
     heuristic = 0
-    unvisitedCorners = []
+    unvisitedCorners = corners # list of unvisited corners
 
-    for corner in corners:
-        if not corner in visitedCorners:
-            unvisitedCorners.append(corner)
-
-    while len(unvisitedCorners) > 0:
+    while len(unvisitedCorners) > 0: # while there are unvisited corners
         manhattanDistance = []
 
         for corner in unvisitedCorners:
-            calculate = util.manhattanDistance(coordinates, corner)
+            calculate = util.manhattanDistance(position, corner) # calculate manhattan distance between current position and unvisited corners
             cornerManhattan = (calculate, corner)
             manhattanDistance.append(cornerManhattan)
 
         minimum, minCorner = min(manhattanDistance) # minimum distance and corner
         unvisitedCorners.remove(minCorner)
 
-        coordinates = minCorner # Update the current position
+        position = minCorner # Update the current position
         heuristic += minimum # Add the min distance to the heuristic
 
     return heuristic
@@ -495,29 +491,22 @@ def foodHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     heuristic = 0
 
-    eaten = state[1]
-    NOeaten = []
+    uneatenFood = foodGrid.asList()
 
-    NOeaten = foodGrid.asList()
-    #print(NOeaten)
-
-    while len(NOeaten) > 0:
+    while uneatenFood:
         manhattan = []
 
-        for food in NOeaten:
+        for food in uneatenFood:
             # Manhattan: abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
-            distance = util.manhattanDistance(position, food)
-            FoodManhattan = (distance, food)
-            #print(FoodManhattan)
-            manhattan.append(FoodManhattan)
+            calculate = util.manhattanDistance(position, food) # calculate manhattan distance between current position and uneaten food
+            foodManhattan = (calculate, food)
+            manhattan.append(foodManhattan)
 
-        minimum , minFood = min(manhattan)
-        #print("The minimum is", minimum)
-        NOeaten.remove(minFood)
+        minimum, minFood = min(manhattan)
+        uneatenFood.remove(minFood) # remove the food that is closest to the current position
 
         heuristic += minimum
-
-        position = minFood
+        position = minFood # update the current position
 
     return heuristic
 

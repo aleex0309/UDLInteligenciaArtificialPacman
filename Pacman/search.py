@@ -74,12 +74,12 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def depthFirstSearch(problem):
+def depthFirstSearch(problem): #Same as slides
     n = node.Node(problem.getStartState())
     if problem.isGoalState(problem.getStartState()):
         return n.total_path()
 
-    fringe = util.Stack()
+    fringe = util.Stack() #Stack as fringe
     fringe.push(n)
     generated = set()
 
@@ -89,11 +89,11 @@ def depthFirstSearch(problem):
 
         for successor, action, cost in (problem.getSuccessors(n.state)):
             ns = node.Node(successor, n, action, n.cost + cost)
-            if ns.state not in generated:
+            if ns.state not in generated: # Not in expanded or fringe
                 if problem.isGoalState(ns.state):
                     return ns.total_path()
                 fringe.push(ns)
-                generated.add(ns.state)
+                generated.add(ns.state) # Add to expanded (Fringe)
 
     print("No solution for this problem.")
     sys.exit(-1)
@@ -106,7 +106,7 @@ def breadthFirstSearch(problem):
     if problem.isGoalState(problem.getStartState()):
         return n.total_path()
 
-    fringe = util.Queue()
+    fringe = util.Queue() #Queue as fringe
     fringe.push(n)
     generated = set()
 
@@ -129,23 +129,24 @@ def uniformCostSearch(problem):
     n = node.Node(problem.getStartState())
     if problem.isGoalState(problem.getStartState()):
         return n.total_path()
-    fringe = util.PriorityQueue()
-    generated = {}
-    fringe.push(n, 0)
-    generated[n.state] = ("F", 0)
+    fringe = util.PriorityQueue() #Priority Queue as fringe
+    expanded = {}
+    fringe.push(n, 0) #Push the start node with cost 0
+    expanded[n.state] = ("F", 0) #Fringe and cost
     while not fringe.isEmpty():
         n = fringe.pop()
         if problem.isGoalState(n.state):
             return n.total_path()
-        generated[n.state] = ("E", n.cost)
+        expanded[n.state] = ("E", n.cost) #Expanded and cost
         for successor, action, cost in (problem.getSuccessors(n.state)):
             ns = node.Node(successor, n, action, n.cost + cost)
-            if ns.state not in generated:
+            if ns.state not in expanded:
                 fringe.push(ns, ns.cost)
-                generated[ns.state] = ("F", ns.cost)
-            elif generated[ns.state][0] == "F" and generated[ns.state][1] > ns.cost:
+                expanded[ns.state] = ("F", ns.cost)
+            elif expanded[ns.state][0] == "F" and expanded[ns.state][1] > ns.cost:
                 fringe.update(ns, ns.cost)
-                generated[ns.state] = ("F", ns.cost)
+                expanded[ns.state] = ("F", ns.cost)
+
     print("No solution for this problem.")
     sys.exit(-1)
 
@@ -159,30 +160,30 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    #Copied from uniformCostSearch and added heuristic as sum into the cost of the node
     n = node.Node(problem.getStartState())
     if problem.isGoalState(problem.getStartState()):
         return n.total_path()
     fringe = util.PriorityQueue()
-    generated = {}
+    expanded = {}
     fringe.push(n, 0)
-    generated[n.state] = ("F", 0)
+    expanded[n.state] = ("F", 0)
     while not fringe.isEmpty():
         n = fringe.pop()
         if problem.isGoalState(n.state):
             return n.total_path()
-        generated[n.state] = ("E", n.cost)
+        expanded[n.state] = ("E", n.cost)
         for successor, action, cost in (problem.getSuccessors(n.state)):
-            ns = node.Node(successor, n, action, n.cost + cost + heuristic(successor, problem))
-            #print(heuristic(successor, problem))
-            if ns.state not in generated:
+            ns = node.Node(successor, n, action, n.cost + cost + heuristic(successor, problem)) #Added heuristic
+            if ns.state not in expanded:
                 fringe.push(ns, ns.cost)
-                generated[ns.state] = ("F", ns.cost)
-            elif generated[ns.state][0] == "F" and generated[ns.state][1] > ns.cost:
+                expanded[ns.state] = ("F", ns.cost)
+            elif expanded[ns.state][0] == "F" and expanded[ns.state][1] > ns.cost:
                 fringe.update(ns, ns.cost)
-                generated[ns.state] = ("F", ns.cost)
+                expanded[ns.state] = ("F", ns.cost)
+
     print("No solution for this problem.")
     sys.exit(-1)
-    util.raiseNotDefined()
 
 
 # Abbreviations
