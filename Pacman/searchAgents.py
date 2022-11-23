@@ -391,7 +391,7 @@ def cornersHeuristic(state, problem):
             CornerManhattan = (calculate, corner)
             #If has walls in the path, add "infinite" to the manhattan distance
             if walls[coordinates[0]][corner[1]] or walls[corner[0]][coordinates[1]]:
-                CornerManhattan = (999999, corner)
+                CornerManhattan = (300, corner)
             manhattan.append(CornerManhattan)
 
         minimum, minCorner = min(manhattan)
@@ -506,7 +506,7 @@ def foodHeuristic(state, problem):
             calculate = util.manhattanDistance(position, food) # calculate manhattan distance between current position and uneaten food
             foodManhattan = (calculate, food)
             if problem.walls[position[0]][food[1]]:
-                foodManhattan = (calculate + 9999999, food) # add "infinite" to the manhattan distance
+                foodManhattan = (calculate + 722464184, food) # add "infinite" to the manhattan distance
             manhattan.append(foodManhattan)
 
         minimum, minFood = min(manhattan)
